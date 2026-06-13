@@ -17,30 +17,6 @@ jobs:
           # Executa o script .bat para instalar os componentes
           cmd /c Downloads.bat
 
-      # NOVO STEP: Instalação do Roblox e Roblox Studio (adicionado sem alterar o resto)
-      - name: Install Roblox & Roblox Studio
-        run: |
-          # Instala o Roblox Player via Chocolatey (jogo)
-          Set-ExecutionPolicy Bypass -Scope Process -Force
-          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-          iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-          choco install roblox -y
-          # Instala o Roblox Studio (instalador oficial)
-          $studioInstaller = "$env:TEMP\RobloxStudioLauncher.exe"
-          Invoke-WebRequest -Uri "https://setup.rbxcdn.com/RobloxStudioLauncher.exe" -OutFile $studioInstaller
-          Start-Process -FilePath $studioInstaller -ArgumentList "/S" -Wait
-          # Cria atalho na área de trabalho
-          $desktop = [Environment]::GetFolderPath("Desktop")
-          $robloxPath = "${env:LocalAppData}\Roblox\Versions\*"
-          $studioExe = Get-ChildItem "$robloxPath\RobloxStudioLauncher.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
-          if ($studioExe) {
-            $ws = New-Object -ComObject WScript.Shell
-            $shortcut = $ws.CreateShortcut("$desktop\Roblox Studio.lnk")
-            $shortcut.TargetPath = $studioExe.FullName
-            $shortcut.Save()
-          }
-          Write-Host "Roblox e Roblox Studio instalados com sucesso!"
-
       - name: Log In To AnyDesk
         run: |
           # Verifica se o arquivo start.bat existe antes de executar
